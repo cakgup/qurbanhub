@@ -8,9 +8,9 @@ const DEMO = {
     subtitle: 'Mudah, amanah, dan transparan dalam pengelolaan qurban.',
     description: 'Daftar qurban, pantau status pembayaran, dan dukung distribusi daging qurban kepada penerima manfaat secara tertib dan transparan.',
     bank: CONFIG.DEFAULT_BANK || 'BSI',
-    rekening: CONFIG.DEFAULT_REKENING || '1234567890',
-    atas_nama: CONFIG.DEFAULT_ATAS_NAMA || 'Yayasan Baghasasi',
-    whatsapp: CONFIG.DEFAULT_WHATSAPP || '6281234567890',
+    rekening: CONFIG.DEFAULT_REKENING || '8000553558',
+    atas_nama: CONFIG.DEFAULT_ATAS_NAMA || 'Baghasasi',
+    whatsapp: CONFIG.DEFAULT_WHATSAPP || '0852-1807-0870',
     lokasi: CONFIG.DEFAULT_LOCATION || 'Bekasi dan sekitarnya',
     deadline: CONFIG.DEFAULT_DEADLINE || 'Menyesuaikan informasi panitia'
   },
@@ -43,16 +43,6 @@ const DEMO = {
       kuota: 15,
       terisi: 5,
       deskripsi: 'Paket qurban kambing atau domba untuk satu pekurban.',
-      aktif: 'Ya'
-    },
-    {
-      id_paket: 'SEDEKAH',
-      nama_paket: 'Sedekah Daging',
-      jenis_hewan: 'Sedekah',
-      harga: 0,
-      kuota: 999,
-      terisi: 0,
-      deskripsi: 'Dukungan nominal bebas untuk perluasan distribusi manfaat.',
       aktif: 'Ya'
     }
   ],
@@ -159,25 +149,30 @@ function renderSettings() {
   $('#appHeroTitle').textContent = s.program_name || CONFIG.APP_NAME || 'QurbanHub Baghasasi';
   $('#appHeroSubtitle').textContent = s.subtitle || 'Mudah, amanah, dan transparan dalam pengelolaan qurban.';
   $('#programYear').textContent = `Idul Adha ${s.tahun_hijriah || '1447 H'} / ${s.tahun_masehi || '2026 M'}`;
-  $('#bankTitle').textContent = `${s.bank || CONFIG.DEFAULT_BANK || 'Bank'} - Rekening Qurban`;
-  $('#bankAccount').textContent = s.rekening || CONFIG.DEFAULT_REKENING || '-';
-  $('#bankName').textContent = `Atas nama ${s.atas_nama || CONFIG.DEFAULT_ATAS_NAMA || 'Yayasan Baghasasi'}`;
-  $('#programLocation').textContent = s.lokasi || CONFIG.DEFAULT_LOCATION || '-';
-  $('#deadlineText').textContent = s.deadline || CONFIG.DEFAULT_DEADLINE || '-';
-  $('#contactText').textContent = `Kontak panitia: ${s.whatsapp || CONFIG.DEFAULT_WHATSAPP || '-'}`;
+  $('#bankTitle').textContent = `${s.bank || CONFIG.DEFAULT_BANK || 'Bank'} - ${s.rekening || CONFIG.DEFAULT_REKENING || '-'}`;
+  $('#bankAccount').textContent = '';
+  $('#bankName').textContent = `Atas nama ${s.atas_nama || CONFIG.DEFAULT_ATAS_NAMA || 'Baghasasi'}`;
+  if ($('#programLocation')) $('#programLocation').textContent = s.lokasi || CONFIG.DEFAULT_LOCATION || '-';
+  if ($('#deadlineText')) $('#deadlineText').textContent = s.deadline || CONFIG.DEFAULT_DEADLINE || '-';
+  $('#contactText').innerHTML = `Kontak panitia <span>${escapeHtml(s.whatsapp || CONFIG.DEFAULT_WHATSAPP || '-')}</span>`;
   $('#btnWhatsapp').href = `https://wa.me/${normalizeWhatsapp(s.whatsapp || CONFIG.DEFAULT_WHATSAPP)}?text=${encodeURIComponent('Assalamu alaikum, saya ingin bertanya tentang program Qurban Baghasasi.')}`;
 }
 
 function renderStats() {
   const d = state.dashboard || {};
-  $('#statPendaftar').textContent = Number(d.total_pendaftar || 0).toLocaleString('id-ID');
-  $('#statSapi').textContent = Number(d.total_sapi || 0).toLocaleString('id-ID');
-  $('#statKambing').textContent = Number(d.total_kambing || 0).toLocaleString('id-ID');
-  $('#statDana').textContent = formatRupiah(d.total_lunas || 0).replace(',00', '');
+  if ($('#statPendaftar')) $('#statPendaftar').textContent = Number(d.total_pendaftar || 0).toLocaleString('id-ID');
+  if ($('#statSapi')) $('#statSapi').textContent = Number(d.total_sapi || 0).toLocaleString('id-ID');
+  if ($('#statKambing')) $('#statKambing').textContent = Number(d.total_kambing || 0).toLocaleString('id-ID');
+  if ($('#statDana')) $('#statDana').textContent = formatRupiah(d.total_lunas || 0).replace(',00', '');
 }
 
 function renderPackages() {
-  const activePackages = state.packages.filter((item) => String(item.aktif || 'Ya').toLowerCase() !== 'tidak');
+  const activePackages = state.packages.filter((item) => {
+    const isActive = String(item.aktif || 'Ya').toLowerCase() !== 'tidak';
+    const name = String(item.nama_paket || '').toLowerCase();
+    const type = String(item.jenis_hewan || '').toLowerCase();
+    return isActive && name !== 'sedekah daging' && type !== 'sedekah';
+  });
   const container = $('#packageList');
   const select = $('#paketSelect');
 
@@ -504,7 +499,7 @@ function bindEvents() {
   $$('.tab-button').forEach((button) => {
     button.addEventListener('click', () => switchTab(button.dataset.tab));
   });
-  $('#btnAdmin').addEventListener('click', openAdminDialog);
+  if ($('#btnAdmin')) $('#btnAdmin').addEventListener('click', openAdminDialog);
   $('#btnLoginAdmin').addEventListener('click', loginAdmin);
   $('#btnRefreshAdmin').addEventListener('click', loadAdminData);
   $('#btnLogoutAdmin').addEventListener('click', logoutAdmin);

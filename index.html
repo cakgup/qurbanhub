@@ -17,14 +17,13 @@
         <div class="brand-card">
           <img class="brand-logo" src="assets/logo-baghasasi.png" alt="Logo Yayasan Baghasasi" />
           <div class="brand-text">
-            <p class="eyebrow" id="programYear">Idul Adha 1447 H / 2026 M</p>
             <h1 id="programName">QurbanHub Baghasasi</h1>
             <p id="programSubtitle">Mudah, amanah, dan transparan dalam pengelolaan qurban.</p>
           </div>
         </div>
         <div class="landing-copy">
-          <span class="pill">Program Qurban Yayasan</span>
-          <h2>Tunaikan qurban terbaik bersama Yayasan Baghasasi.</h2>
+          <span class="pill" id="programYear">Idul Adha 1447 H / 2026 M</span>
+          <h2>Semua bisa Qurban</h2>
           <p id="programDescription">Daftar qurban, pantau status pembayaran, dan dukung distribusi daging qurban kepada penerima manfaat secara tertib dan transparan.</p>
           <button class="btn primary full" id="btnEnterApp" type="button">Masuk</button>
         </div>
@@ -41,42 +40,14 @@
         </section>
 
         <nav class="tab-nav glass" aria-label="Navigasi informasi qurban">
-          <button class="tab-button active" id="tabBtn-ringkasan" type="button" data-tab="ringkasan" aria-controls="tab-ringkasan" aria-selected="true">Ringkasan</button>
+          <button class="tab-button active" id="tabBtn-ringkasan" type="button" data-tab="ringkasan" aria-controls="tab-ringkasan" aria-selected="true">Paket Qurban</button>
           <button class="tab-button" id="tabBtn-daftar" type="button" data-tab="daftar" aria-controls="tab-daftar" aria-selected="false">Daftar</button>
           <button class="tab-button" id="tabBtn-status" type="button" data-tab="status" aria-controls="tab-status" aria-selected="false">Status</button>
           <button class="tab-button" id="tabBtn-info" type="button" data-tab="info" aria-controls="tab-info" aria-selected="false">Info</button>
         </nav>
 
         <section class="tab-panel active" id="tab-ringkasan" role="tabpanel" aria-labelledby="tabBtn-ringkasan">
-          <section class="quick-stats" aria-label="Ringkasan program qurban">
-            <article class="stat-card">
-              <span>Total Pendaftar</span>
-              <strong id="statPendaftar">0</strong>
-              <small>orang</small>
-            </article>
-            <article class="stat-card">
-              <span>Sapi</span>
-              <strong id="statSapi">0</strong>
-              <small>ekor/slot</small>
-            </article>
-            <article class="stat-card">
-              <span>Kambing</span>
-              <strong id="statKambing">0</strong>
-              <small>ekor</small>
-            </article>
-            <article class="stat-card accent">
-              <span>Dana Lunas</span>
-              <strong id="statDana">Rp0</strong>
-              <small>terkonfirmasi</small>
-            </article>
-          </section>
-
           <section class="section-block" id="paketQurban">
-            <div class="section-heading">
-              <p class="eyebrow">Paket Qurban</p>
-              <h3>Pilih paket yang sesuai</h3>
-              <p>Harga, kuota, dan keterangan dapat diubah dari Google Spreadsheet.</p>
-            </div>
             <div class="package-list" id="packageList">
               <div class="skeleton-card"></div>
               <div class="skeleton-card"></div>
@@ -86,42 +57,36 @@
 
         <section class="tab-panel" id="tab-daftar" role="tabpanel" aria-labelledby="tabBtn-daftar">
           <section class="section-block form-section" id="formPendaftaran">
-            <div class="section-heading">
-              <p class="eyebrow">Formulir</p>
-              <h3>Pendaftaran Pekurban</h3>
-              <p>Isi data berikut. Panitia akan menghubungi melalui WhatsApp untuk konfirmasi.</p>
-            </div>
-
             <form class="qurban-form glass" id="qurbanForm">
               <label>
-                Nama lengkap <span>*</span>
+                <span class="field-label">Nama lengkap <strong>*</strong></span>
                 <input name="nama" type="text" placeholder="Contoh: Ahmad Baghasasi" required />
               </label>
               <label>
-                Nomor WhatsApp <span>*</span>
+                <span class="field-label">Nomor WhatsApp <strong>*</strong></span>
                 <input name="whatsapp" type="tel" placeholder="Contoh: 62812xxxxxxx" inputmode="tel" required />
               </label>
               <label>
-                Alamat / domisili
-                <textarea name="alamat" rows="2" placeholder="Contoh: Bekasi, Jawa Barat"></textarea>
+                <span class="field-label">Alamat / domisili</span>
+                <input name="alamat" type="text" placeholder="Contoh: Bekasi, Jawa Barat" />
               </label>
               <label>
-                Paket qurban <span>*</span>
+                <span class="field-label">Paket qurban <strong>*</strong></span>
                 <select name="id_paket" id="paketSelect" required>
                   <option value="">Pilih paket</option>
                 </select>
               </label>
               <label>
-                Jumlah bagian <span>*</span>
+                <span class="field-label">Jumlah bagian <strong>*</strong></span>
                 <input name="jumlah_bagian" type="number" min="1" value="1" required />
               </label>
               <label>
-                Nama yang diniatkan <span>*</span>
-                <textarea name="nama_niat" rows="3" placeholder="Nama pekurban/keluarga yang diniatkan" required></textarea>
+                <span class="field-label">Nama yang diniatkan <strong>*</strong></span>
+                <textarea name="nama_niat" rows="2" placeholder="Nama pekurban/keluarga yang diniatkan" required></textarea>
               </label>
               <label>
-                Catatan tambahan
-                <textarea name="catatan" rows="2" placeholder="Catatan untuk panitia, bila ada"></textarea>
+                <span class="field-label">Catatan tambahan</span>
+                <input name="catatan" type="text" placeholder="Catatan untuk panitia, bila ada" />
               </label>
               <button class="btn primary full" type="submit" id="btnSubmit">Kirim Pendaftaran</button>
               <p class="form-note">Dengan mengirim data, Anda menyetujui data digunakan oleh panitia untuk administrasi program qurban.</p>
@@ -155,33 +120,13 @@
             <button class="btn secondary" type="button" id="btnCopyRekening">Salin Rekening</button>
           </section>
 
-          <section class="section-block info-grid">
-            <article class="info-card">
-              <span aria-hidden="true">Lokasi</span>
-              <h4>Lokasi</h4>
-              <p id="programLocation">Bekasi dan sekitarnya</p>
-            </article>
-            <article class="info-card">
-              <span aria-hidden="true">Batas</span>
-              <h4>Batas Daftar</h4>
-              <p id="deadlineText">Menyesuaikan informasi panitia</p>
-            </article>
-            <article class="info-card">
-              <span aria-hidden="true">Amanah</span>
-              <h4>Distribusi</h4>
-              <p>Disalurkan kepada penerima manfaat sesuai pendataan panitia.</p>
-            </article>
-          </section>
-
           <section class="contact-card glass">
             <div>
-              <p class="eyebrow">Kontak Panitia</p>
               <h3>Butuh bantuan?</h3>
               <p id="contactText">Kontak panitia: -</p>
             </div>
             <div class="contact-actions">
               <a id="btnWhatsapp" class="btn whatsapp" target="_blank" rel="noopener">Hubungi Panitia</a>
-              <button class="btn ghost" id="btnAdmin" type="button">Admin</button>
             </div>
           </section>
         </section>
