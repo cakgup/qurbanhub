@@ -39,7 +39,7 @@ const DEMO = {
       id_paket: 'KAMBING-1',
       nama_paket: 'Kambing / Domba',
       jenis_hewan: 'Kambing',
-      harga: 25000000,
+      harga: 3000000,
       kuota: 15,
       terisi: 5,
       deskripsi: 'Paket qurban kambing atau domba untuk satu pekurban.',
