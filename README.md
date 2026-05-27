@@ -50,6 +50,7 @@ QurbanHub membantu panitia mengelola alur qurban dari tahap informasi program sa
 - menghitung nominal berdasarkan paket dan jumlah bagian;
 - menampilkan rekening pembayaran;
 - mengecek status pendaftaran melalui nomor WhatsApp;
+- menampilkan tombol download sertifikat ketika status qurban sudah `Disembelih`;
 - melihat rekap jumlah pendaftar, sapi, kambing, dan pembayaran lunas;
 - membantu admin memperbarui status pembayaran dan status proses qurban;
 - menyimpan data utama di Google Spreadsheet.
@@ -74,6 +75,8 @@ Google Apps Script menyimpan data ke Google Spreadsheet
 Panitia memantau data dan memperbarui status
         ↓
 Pekurban dapat mengecek status melalui nomor WhatsApp
+        ↓
+Jika status qurban sudah Disembelih, pekurban dapat membuka tombol Download Sertifikat
 ```
 
 ---
@@ -87,6 +90,7 @@ Pekurban dapat mengecek status melalui nomor WhatsApp
 | 📝 Form pendaftaran | Pekurban dapat mengisi nama, WhatsApp, alamat, paket, jumlah bagian, nama niat, dan catatan. |
 | 💰 Informasi pembayaran | Menampilkan bank, nomor rekening, atas nama, dan tombol salin rekening. |
 | 🔎 Cek status | Pekurban dapat mengecek status pendaftaran menggunakan nomor WhatsApp. |
+| 📄 Download sertifikat | Tombol `Download Sertifikat` tampil pada hasil cek status ketika status qurban sudah `Disembelih`. |
 | 📊 Ringkasan dashboard | Menampilkan total pendaftar, total sapi, total kambing, nominal lunas, dan paket aktif. |
 | 🧑‍💼 Panel admin sederhana | Admin dapat melihat daftar pendaftar dan memperbarui status pembayaran/proses qurban. |
 | 🧾 Google Sheets database | Data tersimpan dalam sheet `Settings`, `Paket`, `Pekurban`, `Hewan`, `Distribusi`, dan `Log`. |
@@ -649,6 +653,7 @@ Sebelum digunakan oleh panitia, lakukan uji berikut:
 | Load paket | Daftar paket tampil dari data demo atau Google Sheet. |
 | Submit pendaftaran | Data berhasil masuk ke sheet `Pekurban`. |
 | Cek status | Data dapat dicari menggunakan nomor WhatsApp. |
+| Download sertifikat | Tombol sertifikat tampil saat `status_qurban` bernilai `Disembelih`. |
 | Update admin | Status pembayaran/proses berhasil berubah. |
 | Salin rekening | Nomor rekening berhasil disalin. |
 | WhatsApp panitia | Tombol/kontak mengarah ke nomor yang benar. |
@@ -718,6 +723,7 @@ Beberapa pengembangan yang dapat dilakukan pada versi berikutnya:
 - autentikasi admin berbasis akun Google;
 - validasi pembayaran berbasis upload bukti transfer;
 - export laporan ke PDF atau Excel;
+- integrasi file sertifikat qurban dinamis per pekurban;
 - halaman rekap khusus panitia;
 - fitur kuota otomatis yang menutup paket jika sudah penuh;
 - nomor invoice/pendaftaran yang lebih rapi;
