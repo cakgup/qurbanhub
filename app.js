@@ -154,7 +154,7 @@ function renderSettings() {
   $('#bankName').textContent = `Atas nama ${s.atas_nama || CONFIG.DEFAULT_ATAS_NAMA || 'Baghasasi'}`;
   if ($('#programLocation')) $('#programLocation').textContent = s.lokasi || CONFIG.DEFAULT_LOCATION || '-';
   if ($('#deadlineText')) $('#deadlineText').textContent = s.deadline || CONFIG.DEFAULT_DEADLINE || '-';
-  $('#contactText').innerHTML = `Kontak panitia <span>${escapeHtml(s.whatsapp || CONFIG.DEFAULT_WHATSAPP || '-')}</span>`;
+  if ($('#contactText')) $('#contactText').innerHTML = `Kontak panitia <span>${escapeHtml(s.whatsapp || CONFIG.DEFAULT_WHATSAPP || '-')}</span>`;
   $('#btnWhatsapp').href = `https://wa.me/${normalizeWhatsapp(s.whatsapp || CONFIG.DEFAULT_WHATSAPP)}?text=${encodeURIComponent('Assalamu alaikum, saya ingin bertanya tentang program Qurban Baghasasi.')}`;
 }
 
