@@ -1,7 +1,9 @@
 :root {
-  --navy: #17234a;
+  --primary: #1A3A6B;
+  --accent: #FFCA1A;
+  --navy: var(--primary);
   --navy-soft: #263868;
-  --gold: #f6d34b;
+  --gold: var(--accent);
   --gold-dark: #e6bd24;
   --cream: #fff9e8;
   --ink: #101936;
