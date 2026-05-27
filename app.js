@@ -72,7 +72,8 @@ const state = {
   packages: [],
   dashboard: DEMO.dashboard,
   participants: [],
-  isAdmin: false
+  isAdmin: false,
+  backendProblem: false
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -156,13 +157,13 @@ function renderSettings() {
   $('#programSubtitle').textContent = s.subtitle || 'Mudah, amanah, dan transparan dalam pengelolaan qurban.';
   $('#programDescription').textContent = s.description || DEMO.settings.description;
   $('#programYear').textContent = `Idul Adha ${s.tahun_hijriah || '1447 H'} / ${s.tahun_masehi || '2026 M'}`;
-  $('#bankTitle').textContent = `${s.bank || CONFIG.DEFAULT_BANK || 'Bank'} · Rekening Qurban`;
+  $('#bankTitle').textContent = `${s.bank || CONFIG.DEFAULT_BANK || 'Bank'} - Rekening Qurban`;
   $('#bankAccount').textContent = s.rekening || CONFIG.DEFAULT_REKENING || '-';
   $('#bankName').textContent = `Atas nama ${s.atas_nama || CONFIG.DEFAULT_ATAS_NAMA || 'Yayasan Baghasasi'}`;
   $('#programLocation').textContent = s.lokasi || CONFIG.DEFAULT_LOCATION || '-';
   $('#deadlineText').textContent = s.deadline || CONFIG.DEFAULT_DEADLINE || '-';
   $('#contactText').textContent = `Kontak panitia: ${s.whatsapp || CONFIG.DEFAULT_WHATSAPP || '-'}`;
-  $('#btnWhatsapp').href = `https://wa.me/${normalizeWhatsapp(s.whatsapp || CONFIG.DEFAULT_WHATSAPP)}?text=${encodeURIComponent('Assalamu’alaikum, saya ingin bertanya tentang program Qurban Baghasasi.')}`;
+  $('#btnWhatsapp').href = `https://wa.me/${normalizeWhatsapp(s.whatsapp || CONFIG.DEFAULT_WHATSAPP)}?text=${encodeURIComponent('Assalamu alaikum, saya ingin bertanya tentang program Qurban Baghasasi.')}`;
 }
 
 function renderStats() {
@@ -177,6 +178,15 @@ function renderPackages() {
   const activePackages = state.packages.filter((item) => String(item.aktif || 'Ya').toLowerCase() !== 'tidak');
   const container = $('#packageList');
   const select = $('#paketSelect');
+
+  if (!activePackages.length) {
+    container.innerHTML = '<div class="status-result muted">Paket qurban belum tersedia. Silakan hubungi panitia atau coba muat ulang beberapa saat lagi.</div>';
+    select.innerHTML = '<option value="">Paket belum tersedia</option>';
+    select.disabled = true;
+    return;
+  }
+
+  select.disabled = false;
 
   container.innerHTML = activePackages.map((item) => {
     const kuota = Number(item.kuota || 0);
@@ -205,7 +215,7 @@ function renderPackages() {
   }).join('');
 
   select.innerHTML = '<option value="">Pilih paket</option>' + activePackages.map((item) => {
-    return `<option value="${item.id_paket}">${escapeHtml(item.nama_paket)} · ${formatRupiah(item.harga)}</option>`;
+    return `<option value="${item.id_paket}">${escapeHtml(item.nama_paket)} - ${formatRupiah(item.harga)}</option>`;
   }).join('');
 
   $$('.btnSelectPackage').forEach((button) => {
@@ -214,6 +224,7 @@ function renderPackages() {
 }
 
 function selectPackage(id) {
+  switchTab('daftar');
   $('#paketSelect').value = id;
   $('#formPendaftaran').scrollIntoView({ behavior: 'smooth', block: 'start' });
   toast('Paket dipilih. Silakan lengkapi formulir pendaftaran.');
@@ -236,13 +247,20 @@ async function loadPublicData() {
       apiGet('getDashboard')
     ]);
 
-    if (settings.ok) state.settings = { ...DEMO.settings, ...settings.data };
-    if (packages.ok) state.packages = Array.isArray(packages.data) ? packages.data : DEMO.packages;
-    if (dashboard.ok) state.dashboard = { ...DEMO.dashboard, ...dashboard.data };
+    const hasBackendProblem = !settings.ok || !packages.ok || !dashboard.ok;
+    state.backendProblem = hasBackendProblem;
+
+    state.settings = settings.ok ? { ...DEMO.settings, ...settings.data } : DEMO.settings;
+    state.packages = packages.ok && Array.isArray(packages.data) ? packages.data : DEMO.packages;
+    state.dashboard = dashboard.ok ? { ...DEMO.dashboard, ...dashboard.data } : DEMO.dashboard;
 
     renderSettings();
     renderPackages();
     renderStats();
+
+    if (hasBackendProblem && !document.body.classList.contains('landing-mode')) {
+      toast('Data online belum siap. Contoh tampilan ditampilkan sementara.');
+    }
   } catch (error) {
     console.error(error);
     state.packages = DEMO.packages;
@@ -302,7 +320,12 @@ async function checkStatus() {
   try {
     const result = await apiGet('getStatus', { whatsapp });
     const rows = Array.isArray(result.data) ? result.data : [];
-    if (!result.ok || rows.length === 0) {
+    if (!result.ok) {
+      resultNode.classList.add('muted');
+      resultNode.textContent = result.message || 'Status belum bisa dicek. Silakan coba lagi beberapa saat.';
+      return;
+    }
+    if (rows.length === 0) {
       resultNode.classList.add('muted');
       resultNode.textContent = 'Data belum ditemukan. Pastikan nomor WhatsApp sama dengan saat pendaftaran.';
       return;
@@ -344,7 +367,7 @@ function renderAdminList() {
   list.innerHTML = state.participants.map((item) => `
     <article class="admin-item" data-id="${escapeHtml(item.id)}">
       <h4>${escapeHtml(item.nama || '-')}</h4>
-      <p>${escapeHtml(item.whatsapp || '-')} · ${escapeHtml(item.nama_paket || item.id_paket || '-')}</p>
+      <p>${escapeHtml(item.whatsapp || '-')} - ${escapeHtml(item.nama_paket || item.id_paket || '-')}</p>
       <p>Nominal: <strong>${formatRupiah(item.nominal)}</strong></p>
       <span class="badge">${escapeHtml(item.status_bayar || 'Belum Bayar')}</span>
       <div class="admin-grid">
@@ -413,18 +436,62 @@ function logoutAdmin() {
 
 function copyRekening() {
   const rekening = state.settings.rekening || CONFIG.DEFAULT_REKENING || '';
-  navigator.clipboard.writeText(rekening).then(() => {
+  if (!rekening) {
+    toast('Nomor rekening belum tersedia.');
+    return;
+  }
+
+  if (!navigator.clipboard) {
+    const input = document.createElement('input');
+    input.value = rekening;
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand('copy');
+    input.remove();
     toast('Nomor rekening disalin.');
-  }).catch(() => {
-    toast('Gagal menyalin rekening.');
+    return;
+  }
+
+  navigator.clipboard.writeText(rekening)
+    .then(() => toast('Nomor rekening disalin.'))
+    .catch(() => toast('Gagal menyalin rekening.'));
+}
+
+function enterApp() {
+  document.body.classList.remove('landing-mode');
+  document.body.classList.add('app-open');
+  $('#landingScreen').hidden = true;
+  $('#appContent').hidden = false;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (state.backendProblem) {
+    toast('Data online belum siap. Contoh tampilan ditampilkan sementara.');
+  }
+}
+
+function switchTab(tabName) {
+  $$('.tab-button').forEach((button) => {
+    const isActive = button.dataset.tab === tabName;
+    button.classList.toggle('active', isActive);
+    button.setAttribute('aria-selected', String(isActive));
   });
+  $$('.tab-panel').forEach((panel) => {
+    const isActive = panel.id === `tab-${tabName}`;
+    panel.classList.toggle('active', isActive);
+    panel.hidden = !isActive;
+  });
+  if (!document.body.classList.contains('landing-mode')) {
+    $('#appContent').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 function bindEvents() {
   $('#qurbanForm').addEventListener('submit', handleSubmit);
   $('#btnCopyRekening').addEventListener('click', copyRekening);
-  $('#btnOpenStatus').addEventListener('click', () => $('#statusPanel').scrollIntoView({ behavior: 'smooth' }));
   $('#btnCheckStatus').addEventListener('click', checkStatus);
+  $('#btnEnterApp').addEventListener('click', enterApp);
+  $$('.tab-button').forEach((button) => {
+    button.addEventListener('click', () => switchTab(button.dataset.tab));
+  });
   $('#btnAdmin').addEventListener('click', openAdminDialog);
   $('#btnLoginAdmin').addEventListener('click', loginAdmin);
   $('#btnRefreshAdmin').addEventListener('click', loadAdminData);
@@ -435,7 +502,14 @@ function bindEvents() {
       loginAdmin();
     }
   });
+  $('#statusWhatsapp').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      checkStatus();
+    }
+  });
 }
 
 bindEvents();
+switchTab('ringkasan');
 loadPublicData();
