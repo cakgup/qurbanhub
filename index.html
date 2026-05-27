@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#00bdb2" />
+    <meta name="description" content="QurbanHub Baghasasi - halaman manajemen qurban berbasis GitHub Pages dan Google Apps Script." />
+    <title>QurbanHub Baghasasi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-card glass">
+          <img class="brand-logo" src="assets/logo-baghasasi.png" alt="Logo Yayasan Baghasasi" />
+          <div class="brand-text">
+            <p class="eyebrow" id="programYear">Idul Adha 1447 H / 2026 M</p>
+            <h1 id="programName">QurbanHub Baghasasi</h1>
+            <p id="programSubtitle">Mudah, amanah, dan transparan dalam pengelolaan qurban.</p>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero-section glass">
+          <div class="hero-copy">
+            <span class="pill">Program Qurban Yayasan</span>
+            <h2>Tunaikan qurban terbaik Anda bersama <span>Yayasan Baghasasi</span>.</h2>
+            <p id="programDescription">Daftar qurban, pantau status pembayaran, dan dukung distribusi daging qurban kepada penerima manfaat secara tertib dan transparan.</p>
+          </div>
+          <div class="hero-actions">
+            <a href="#formPendaftaran" class="btn primary">Daftar Qurban</a>
+            <button class="btn ghost" id="btnOpenStatus" type="button">Cek Status</button>
+          </div>
+        </section>
+
+        <section class="quick-stats" aria-label="Ringkasan program qurban">
+          <article class="stat-card">
+            <span>Total Pendaftar</span>
+            <strong id="statPendaftar">0</strong>
+            <small>orang</small>
+          </article>
+          <article class="stat-card">
+            <span>Sapi</span>
+            <strong id="statSapi">0</strong>
+            <small>ekor/slot</small>
+          </article>
+          <article class="stat-card">
+            <span>Kambing</span>
+            <strong id="statKambing">0</strong>
+            <small>ekor</small>
+          </article>
+          <article class="stat-card accent">
+            <span>Dana Lunas</span>
+            <strong id="statDana">Rp0</strong>
+            <small>terkonfirmasi</small>
+          </article>
+        </section>
+
+        <section class="section-block" id="paketQurban">
+          <div class="section-heading">
+            <p class="eyebrow">Paket Qurban</p>
+            <h3>Pilih paket yang sesuai</h3>
+            <p>Harga, kuota, dan keterangan dapat diubah dari Google Spreadsheet.</p>
+          </div>
+          <div class="package-list" id="packageList">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+          </div>
+        </section>
+
+        <section class="payment-card glass">
+          <div>
+            <p class="eyebrow">Pembayaran</p>
+            <h3 id="bankTitle">Rekening Qurban</h3>
+            <p id="bankAccount">Memuat rekening...</p>
+            <small id="bankName">Atas nama Yayasan Baghasasi</small>
+          </div>
+          <button class="btn secondary" type="button" id="btnCopyRekening">Salin Rekening</button>
+        </section>
+
+        <section class="section-block form-section" id="formPendaftaran">
+          <div class="section-heading">
+            <p class="eyebrow">Formulir</p>
+            <h3>Pendaftaran Pekurban</h3>
+            <p>Isi data berikut. Panitia akan menghubungi melalui WhatsApp untuk konfirmasi.</p>
+          </div>
+
+          <form class="qurban-form glass" id="qurbanForm">
+            <label>
+              Nama lengkap <span>*</span>
+              <input name="nama" type="text" placeholder="Contoh: Ahmad Baghasasi" required />
+            </label>
+            <label>
+              Nomor WhatsApp <span>*</span>
+              <input name="whatsapp" type="tel" placeholder="Contoh: 62812xxxxxxx" inputmode="tel" required />
+            </label>
+            <label>
+              Alamat / domisili
+              <textarea name="alamat" rows="2" placeholder="Contoh: Bekasi, Jawa Barat"></textarea>
+            </label>
+            <label>
+              Paket qurban <span>*</span>
+              <select name="id_paket" id="paketSelect" required>
+                <option value="">Pilih paket</option>
+              </select>
+            </label>
+            <label>
+              Jumlah bagian <span>*</span>
+              <input name="jumlah_bagian" type="number" min="1" value="1" required />
+            </label>
+            <label>
+              Nama yang diniatkan <span>*</span>
+              <textarea name="nama_niat" rows="3" placeholder="Nama pekurban/keluarga yang diniatkan" required></textarea>
+            </label>
+            <label>
+              Catatan tambahan
+              <textarea name="catatan" rows="2" placeholder="Catatan untuk panitia, bila ada"></textarea>
+            </label>
+            <button class="btn primary full" type="submit" id="btnSubmit">Kirim Pendaftaran</button>
+            <p class="form-note">Dengan mengirim data, Anda menyetujui data digunakan oleh panitia untuk administrasi program qurban.</p>
+          </form>
+        </section>
+
+        <section class="status-panel glass" id="statusPanel">
+          <div class="section-heading compact">
+            <p class="eyebrow">Cek Status</p>
+            <h3>Cari data pendaftaran</h3>
+            <p>Masukkan nomor WhatsApp yang digunakan saat mendaftar.</p>
+          </div>
+          <div class="status-search">
+            <input id="statusWhatsapp" type="tel" placeholder="62812xxxxxxx" inputmode="tel" />
+            <button class="btn secondary" id="btnCheckStatus" type="button">Cek</button>
+          </div>
+          <div id="statusResult" class="status-result muted">Belum ada pencarian.</div>
+        </section>
+
+        <section class="section-block info-grid">
+          <article class="info-card">
+            <span>📍</span>
+            <h4>Lokasi</h4>
+            <p id="programLocation">Bekasi dan sekitarnya</p>
+          </article>
+          <article class="info-card">
+            <span>📅</span>
+            <h4>Batas Daftar</h4>
+            <p id="deadlineText">Menyesuaikan informasi panitia</p>
+          </article>
+          <article class="info-card">
+            <span>🤝</span>
+            <h4>Distribusi</h4>
+            <p>Disalurkan kepada penerima manfaat sesuai pendataan panitia.</p>
+          </article>
+        </section>
+
+        <section class="admin-panel glass" id="adminPanel" hidden>
+          <div class="section-heading compact">
+            <p class="eyebrow">Admin</p>
+            <h3>Panel Panitia</h3>
+            <p>Kelola status pembayaran dan proses qurban.</p>
+          </div>
+          <div class="admin-toolbar">
+            <button class="btn secondary" id="btnRefreshAdmin" type="button">Refresh Data</button>
+            <button class="btn ghost" id="btnLogoutAdmin" type="button">Keluar</button>
+          </div>
+          <div id="adminList" class="admin-list"></div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p><strong>Yayasan Baghasasi</strong></p>
+        <p id="contactText">Kontak panitia: -</p>
+        <div class="footer-actions">
+          <a id="btnWhatsapp" class="btn whatsapp" target="_blank" rel="noopener">Hubungi Panitia</a>
+          <button class="btn tiny" id="btnAdmin" type="button">Admin</button>
+        </div>
+        <small>Dibuat dengan CakGup Open Project · QurbanHub</small>
+      </footer>
+    </div>
+
+    <dialog class="admin-dialog" id="adminDialog">
+      <form method="dialog" class="dialog-card">
+        <h3>Masuk Panel Admin</h3>
+        <p>Masukkan password panitia.</p>
+        <input type="password" id="adminPassword" placeholder="Password admin" autocomplete="current-password" />
+        <menu>
+          <button class="btn ghost" value="cancel" type="submit">Batal</button>
+          <button class="btn primary" id="btnLoginAdmin" value="default" type="button">Masuk</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
