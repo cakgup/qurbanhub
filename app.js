@@ -10,7 +10,7 @@ const DEMO = {
     bank: CONFIG.DEFAULT_BANK || 'BSI',
     rekening: CONFIG.DEFAULT_REKENING || '8000553558',
     atas_nama: CONFIG.DEFAULT_ATAS_NAMA || 'Baghasasi',
-    whatsapp: CONFIG.DEFAULT_WHATSAPP || '0852-1807-0870',
+    whatsapp: CONFIG.DEFAULT_WHATSAPP || '81284470433',
     lokasi: CONFIG.DEFAULT_LOCATION || 'Bekasi dan sekitarnya',
     deadline: CONFIG.DEFAULT_DEADLINE || 'Menyesuaikan informasi panitia'
   },
@@ -64,6 +64,13 @@ const state = {
   participants: [],
   isAdmin: false,
   backendProblem: false
+};
+
+const CONTACT_OVERRIDES = {
+  bank: CONFIG.DEFAULT_BANK,
+  rekening: CONFIG.DEFAULT_REKENING,
+  atas_nama: CONFIG.DEFAULT_ATAS_NAMA,
+  whatsapp: CONFIG.DEFAULT_WHATSAPP
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -247,7 +254,7 @@ async function loadPublicData() {
     const hasBackendProblem = !settings.ok || !packages.ok || !dashboard.ok;
     state.backendProblem = hasBackendProblem;
 
-    state.settings = settings.ok ? { ...DEMO.settings, ...settings.data } : DEMO.settings;
+    state.settings = settings.ok ? { ...DEMO.settings, ...settings.data, ...CONTACT_OVERRIDES } : { ...DEMO.settings, ...CONTACT_OVERRIDES };
     state.packages = packages.ok && Array.isArray(packages.data) ? packages.data : DEMO.packages;
     state.dashboard = dashboard.ok ? { ...DEMO.dashboard, ...dashboard.data } : DEMO.dashboard;
 
@@ -327,14 +334,21 @@ async function checkStatus() {
       resultNode.textContent = 'Data belum ditemukan. Pastikan nomor WhatsApp sama dengan saat pendaftaran.';
       return;
     }
-    resultNode.innerHTML = rows.map((item) => `
-      <div>
-        <strong>${escapeHtml(item.nama || '-')}</strong><br />
-        Paket: ${escapeHtml(item.nama_paket || item.id_paket || '-')}<br />
-        Status bayar: <strong>${escapeHtml(item.status_bayar || 'Belum Bayar')}</strong><br />
-        Status qurban: <strong>${escapeHtml(item.status_qurban || 'Pendaftaran Diterima')}</strong>
+    resultNode.innerHTML = rows.map((item) => {
+      const statusQurban = item.status_qurban || 'Pendaftaran Diterima';
+      const canDownloadCertificate = String(statusQurban).trim().toLowerCase().includes('disembelih');
+      return `
+      <div class="status-entry">
+        <div>
+          <strong>${escapeHtml(item.nama || '-')}</strong><br />
+          Paket: ${escapeHtml(item.nama_paket || item.id_paket || '-')}<br />
+          Status bayar: <strong>${escapeHtml(item.status_bayar || 'Belum Bayar')}</strong><br />
+          Status qurban: <strong>${escapeHtml(statusQurban)}</strong>
+        </div>
+        ${canDownloadCertificate ? '<a class="btn secondary certificate-button" href="#">Download Sertifikat</a>' : ''}
       </div>
-    `).join('<hr />');
+    `;
+    }).join('<hr />');
   } catch (error) {
     resultNode.classList.add('muted');
     resultNode.textContent = 'Gagal mencari data status.';
@@ -418,6 +432,9 @@ function loginAdmin() {
   }
   state.isAdmin = true;
   $('#adminDialog').close();
+  if (document.body.classList.contains('landing-mode')) {
+    enterApp();
+  }
   switchTab('info');
   $('#adminPanel').hidden = false;
   $('#adminPanel').scrollIntoView({ behavior: 'smooth' });

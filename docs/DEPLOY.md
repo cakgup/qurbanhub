@@ -81,10 +81,10 @@ GAS_URL: 'https://script.google.com/macros/s/AKfycbxxxx/exec'
 | program_name | QurbanHub Baghasasi |
 | tahun_hijriah | 1447 H |
 | tahun_masehi | 2026 M |
-| bank | BSI |
-| rekening | 1234567890 |
-| atas_nama | Yayasan Baghasasi |
-| whatsapp | 6281234567890 |
+| bank | Bank Syariah Indonesia |
+| rekening | 8000553558 |
+| atas_nama | Baghasasi |
+| whatsapp | 81284470433 |
 
 ### Paket
 

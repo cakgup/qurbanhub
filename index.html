@@ -9,11 +9,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=20260527-certificate" />
   </head>
   <body class="landing-mode">
     <div class="app-shell">
       <header class="topbar landing-screen glass" id="landingScreen">
+        <button class="admin-fab" id="btnAdmin" type="button" aria-label="Masuk panel admin">
+          <span aria-hidden="true"></span>
+        </button>
         <div class="brand-card">
           <img class="brand-logo" src="assets/logo-baghasasi.png" alt="Logo Yayasan Baghasasi" />
           <div class="brand-text">
@@ -115,7 +118,7 @@
               <p class="eyebrow">Pembayaran</p>
               <h3 id="bankTitle">Rekening Qurban</h3>
               <p id="bankAccount">Memuat rekening...</p>
-              <small id="bankName">Atas nama Yayasan Baghasasi</small>
+              <small id="bankName">Atas nama Baghasasi</small>
             </div>
             <button class="btn secondary" type="button" id="btnCopyRekening">Salin Rekening</button>
           </section>
@@ -163,7 +166,7 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="config.js"></script>
-    <script src="app.js"></script>
+    <script src="config.js?v=20260527-certificate"></script>
+    <script src="app.js?v=20260527-certificate"></script>
   </body>
 </html>

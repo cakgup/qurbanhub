@@ -309,10 +309,10 @@ function setupSheet() {
     ['tahun_masehi', '2026 M'],
     ['subtitle', 'Mudah, amanah, dan transparan dalam pengelolaan qurban.'],
     ['description', 'Daftar qurban, pantau status pembayaran, dan dukung distribusi daging qurban kepada penerima manfaat secara tertib dan transparan.'],
-    ['bank', 'BSI'],
-    ['rekening', '1234567890'],
-    ['atas_nama', 'Yayasan Baghasasi'],
-    ['whatsapp', '6281234567890'],
+    ['bank', 'Bank Syariah Indonesia'],
+    ['rekening', '8000553558'],
+    ['atas_nama', 'Baghasasi'],
+    ['whatsapp', '81284470433'],
     ['lokasi', 'Bekasi dan sekitarnya'],
     ['deadline', 'Menyesuaikan informasi panitia']
   ];
