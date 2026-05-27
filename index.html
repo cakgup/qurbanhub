@@ -31,6 +31,15 @@
       </header>
 
       <main class="app-content" id="appContent" hidden>
+        <section class="app-hero">
+          <div>
+            <span class="pill">Program Qurban</span>
+            <h2 id="appHeroTitle">QurbanHub Baghasasi</h2>
+            <p id="appHeroSubtitle">Mudah, amanah, dan transparan dalam pengelolaan qurban.</p>
+          </div>
+          <button class="btn secondary" id="btnBackHome" type="button">Keluar</button>
+        </section>
+
         <nav class="tab-nav glass" aria-label="Navigasi informasi qurban">
           <button class="tab-button active" id="tabBtn-ringkasan" type="button" data-tab="ringkasan" aria-controls="tab-ringkasan" aria-selected="true">Ringkasan</button>
           <button class="tab-button" id="tabBtn-daftar" type="button" data-tab="daftar" aria-controls="tab-daftar" aria-selected="false">Daftar</button>
@@ -163,6 +172,18 @@
               <p>Disalurkan kepada penerima manfaat sesuai pendataan panitia.</p>
             </article>
           </section>
+
+          <section class="contact-card glass">
+            <div>
+              <p class="eyebrow">Kontak Panitia</p>
+              <h3>Butuh bantuan?</h3>
+              <p id="contactText">Kontak panitia: -</p>
+            </div>
+            <div class="contact-actions">
+              <a id="btnWhatsapp" class="btn whatsapp" target="_blank" rel="noopener">Hubungi Panitia</a>
+              <button class="btn ghost" id="btnAdmin" type="button">Admin</button>
+            </div>
+          </section>
         </section>
 
         <section class="admin-panel glass" id="adminPanel" hidden>
@@ -179,13 +200,7 @@
         </section>
       </main>
 
-      <footer class="footer" id="appFooter">
-        <p><strong>Yayasan Baghasasi</strong></p>
-        <p id="contactText">Kontak panitia: -</p>
-        <div class="footer-actions">
-          <a id="btnWhatsapp" class="btn whatsapp" target="_blank" rel="noopener">Hubungi Panitia</a>
-          <button class="btn tiny" id="btnAdmin" type="button">Admin</button>
-        </div>
+      <footer class="footer" id="appFooter" hidden>
         <small>Dibuat dengan CakGup Open Project - QurbanHub</small>
       </footer>
     </div>

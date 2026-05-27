@@ -156,6 +156,8 @@ function renderSettings() {
   $('#programName').textContent = s.program_name || CONFIG.APP_NAME || 'QurbanHub Baghasasi';
   $('#programSubtitle').textContent = s.subtitle || 'Mudah, amanah, dan transparan dalam pengelolaan qurban.';
   $('#programDescription').textContent = s.description || DEMO.settings.description;
+  $('#appHeroTitle').textContent = s.program_name || CONFIG.APP_NAME || 'QurbanHub Baghasasi';
+  $('#appHeroSubtitle').textContent = s.subtitle || 'Mudah, amanah, dan transparan dalam pengelolaan qurban.';
   $('#programYear').textContent = `Idul Adha ${s.tahun_hijriah || '1447 H'} / ${s.tahun_masehi || '2026 M'}`;
   $('#bankTitle').textContent = `${s.bank || CONFIG.DEFAULT_BANK || 'Bank'} - Rekening Qurban`;
   $('#bankAccount').textContent = s.rekening || CONFIG.DEFAULT_REKENING || '-';
@@ -421,6 +423,7 @@ function loginAdmin() {
   }
   state.isAdmin = true;
   $('#adminDialog').close();
+  switchTab('info');
   $('#adminPanel').hidden = false;
   $('#adminPanel').scrollIntoView({ behavior: 'smooth' });
   loadAdminData();
@@ -468,6 +471,14 @@ function enterApp() {
   }
 }
 
+function backToLanding() {
+  document.body.classList.add('landing-mode');
+  document.body.classList.remove('app-open');
+  $('#landingScreen').hidden = false;
+  $('#appContent').hidden = true;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function switchTab(tabName) {
   $$('.tab-button').forEach((button) => {
     const isActive = button.dataset.tab === tabName;
@@ -489,6 +500,7 @@ function bindEvents() {
   $('#btnCopyRekening').addEventListener('click', copyRekening);
   $('#btnCheckStatus').addEventListener('click', checkStatus);
   $('#btnEnterApp').addEventListener('click', enterApp);
+  $('#btnBackHome').addEventListener('click', backToLanding);
   $$('.tab-button').forEach((button) => {
     button.addEventListener('click', () => switchTab(button.dataset.tab));
   });
